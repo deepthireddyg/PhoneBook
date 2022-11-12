@@ -10,57 +10,67 @@ public class PhoneBook {
 
     private final Map<String, List<String>> phoneBook;
 
-    String name;
-    String phoneNumber;
-    Map<String, String> phoneBookMap;
+
+
 
     public PhoneBook(Map<String, List<String>> map) {
         this.phoneBook = map;
     }
 
     public PhoneBook() {
-        this.phoneBook = new HashMap<>();
+        this(new LinkedHashMap<>());
     }
 
     public void add(String name, String phoneNumber) {
-        phoneBook.put(name, Collections.singletonList(phoneNumber));
+        ArrayList<String> a = new ArrayList<>();
+        a.add(phoneNumber);
+        this.phoneBook.put(name,a);
     }
 
     public void addAll(String name, String[] phoneNumbers) {
-        phoneBook.put(name, Arrays.asList(phoneNumbers));
+        ArrayList<String> a = new ArrayList<>();
+        a.addAll(Arrays.asList(phoneNumbers));
+        this.phoneBook.put(name,a);
     }
 
     public void remove(String name) {
-        phoneBook.remove(name);
+
+    this.phoneBook.remove(name);
     }
 
     public Boolean hasEntry(String name) {
 
-        return phoneBook.containsKey(name);
+        return this.phoneBook.containsKey(name);
     }
+        public Boolean hasEntry(String name, String number) {
+
+            return this.phoneBook.containsKey(name) &&
+                    this.phoneBook.get(name).contains(number);
+        }
+
 
     public List<String> lookup(String name) {
-        return (phoneBook.get(name));
+        return this.phoneBook.get(name);
     }
 
     public String reverseLookup(String phoneNumber) {
 
-        for(Map.Entry<String,List<String>> entry:phoneBook.entrySet()) {
-            if ((entry.getValue().toString().replaceAll("[\\[\\],]", "")).equals(phoneNumber)) {
-                return entry.getKey();
+        for (String name : this.phoneBook.keySet()) {
+            if (phoneBook.get(name).contains(phoneNumber)) {
+                return name;
             }
         }
 
-        return null;
+
+        return  null;
     }
 
+
+
     public List<String> getAllContactNames() {
-        Set<String> setNames = phoneBook.keySet();
-        List<String> names=new ArrayList<>(setNames);
-        Collections.sort(names,Collections.reverseOrder());
-        return names;
+        return new ArrayList<>(this.phoneBook.keySet());
     }
-   
+
 
 
     public Map<String, List<String>> getMap() {
